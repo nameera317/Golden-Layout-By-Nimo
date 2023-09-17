@@ -6,29 +6,29 @@ import {
 
 const miniRowConfig: LayoutConfig = {
 	root: {
-		type: ItemType.column,
+		type: ItemType.row,
 		content: [{
 			type: "component",
-			title: "Init",
+			title: "Component A",
 			header: { show: "top" },
 			componentType: "Content1",
-			width: 10,
-			componentState: { abc: 'Yhea' },
+			width: 50,
+			componentState: { abc: 'A' },
 		} as ComponentItemConfig, {
-			type: ItemType.row,
+			type: ItemType.column,
 			content: [{
 				type: "component",
-				title: "Title 1st",
+				title: "Component B",
 				header: { show: "top" },
-				isClosable: false,
 				componentType: "Content1",
-				width: 10,
-				componentState: { abc: 123 },
+				width: 50,
+				componentState: { abc: 'B' },
 			} as ComponentItemConfig, {
 				type: "component",
-				title: "I'm wide",
-				header: { show: "top", popout: false },
-				componentType: "Content2"
+				title: "Component C",
+				header: { show: "top"},
+				componentType: "Content2",
+				componentState: { abc: 'C' },
 			} as ComponentItemConfig
 		]}]
 	}

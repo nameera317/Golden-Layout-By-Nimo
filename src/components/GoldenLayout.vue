@@ -1,10 +1,6 @@
 <template>
 	<div style="position: relative">
-		<SlotExtr ref="predef">
-			<template v-if="props.router" #route="{ url }">
-				<FixedRoute :route="url" />
-			</template>
-		</SlotExtr>
+		
 		<div ref="GLRoot" style="position: absolute; width: 100%; height: 100%">
 			<!-- Root dom for Golden-Layout manager -->
 		</div>
@@ -65,10 +61,7 @@ const
 			type: Object as PropType<LayoutConfig | ResolvedLayoutConfig>,
 			default: ()=> ({}),
 		},
-		router: {
-			type: Boolean,
-			default: false
-		}
+		
 	}),
 /*******************
  * Data
@@ -88,21 +81,6 @@ const
 	router = useRouter();
 let GLayout: VirtualLayout;
 
-if(props.router)
-	router.afterEach((route: RouteLocation)=> {
-		const url = route.fullPath;
-		if(url && url !== '/') {
-			if(routeChildren[url]) {
-				const cntnr = Array.from(MapComponents.entries()).find(([key, value])=> value.refId === routeChildren[route.fullPath])?.[0];
-				if(cntnr) cntnr.focus(true);
-			} else
-				addGlComponent(
-					'route',
-					<string>(route.meta.title || route.name) || route.path.split('/').pop() || '[Route]',
-					{url}
-				);
-		}
-	});
 
 let CurIndex = 0;
 let GlBoundingClientRect: DOMRect;
@@ -119,9 +97,7 @@ const addComponent = async (componentType: string, componentState: JsonValue|und
 	else CurIndex++;
 	AllComponents.value.set(index, ()=> glc(componentState));
 
-	if(props.router && componentType === 'route') {
-		routeChildren[(<{url: string}>componentState).url] = index;
-	}
+	
 	return index;
 };
 
@@ -322,11 +298,7 @@ onMounted(() => {
 		bindComponentEventListener,
 		unbindComponentEventListener
 	);
-	if(props.router) GLayout.on('activeContentItemChanged', (ci: ComponentItem)=> {
-		let url = ci.componentType === 'route' ? (<{url: string}>ci.container.state)?.url : '/';
-		if(router.currentRoute.value.fullPath !== url)
-			router.replace(url);
-	});
+	
 	GLayout.beforeVirtualRectingEvent = handleBeforeVirtualRectingEvent;
 	if(props.config) loadGLLayout(props.config);
 });
@@ -342,3 +314,6 @@ defineExpose({
 	getLayoutConfig
 });
 </script>
+
+<style src="golden-layout/dist/css/goldenlayout-base.css"></style>
+<style src="golden-layout/dist/css/themes/goldenlayout-dark-theme.css"></style>
